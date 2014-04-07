@@ -10,7 +10,7 @@ CKEDITOR.plugins.add('wordcount', {
         if (editor.elementMode === CKEDITOR.ELEMENT_MODE_INLINE) {
             return;
         }
-        
+
         var defaultFormat = '<span class="cke_path_item">',
             intervalId,
             lastWordCount,
@@ -21,7 +21,7 @@ CKEDITOR.plugins.add('wordcount', {
         // Default Config
         var defaultConfig = {
             showWordCount: true,
-            showCharCount: false,
+            showCharCount: true,
             charLimit: 'unlimited',
             wordLimit: 'unlimited',
             countHTML: false
@@ -51,13 +51,13 @@ CKEDITOR.plugins.add('wordcount', {
                 defaultFormat += '&nbsp;(' + editor.lang.wordcount.limit + '&nbsp;' + config.wordLimit + ')';
             }
         }
-        
+
         defaultFormat += '</span>';
 
         var format = defaultFormat;
 
         CKEDITOR.document.appendStyleSheet(this.path + 'css/wordcount.css');
-        
+
         function counterId(editorInstance) {
             return 'cke_wordcount_' + editorInstance.name;
         }
@@ -137,7 +137,7 @@ CKEDITOR.plugins.add('wordcount', {
             if (charCount == lastCharCount) {
                 return true;
             }
-            
+
             lastWordCount = wordCount;
             lastCharCount = charCount;
 
@@ -172,20 +172,20 @@ CKEDITOR.plugins.add('wordcount', {
 
             if (!notify) {
                //counterElement(editorInstance).className = "cke_wordcount cke_wordcountLimitReached";
-                
+
                editorInstance.fire('limitReached', {}, editor);
             }
-            
+
             // lock editor
             editorInstance.config.Locked = 1;
         }
 
         function limitRestored(editorInstance) {
-            
+
             limitRestoredNotified = true;
             limitReachedNotified = false;
             editorInstance.config.Locked = 0;
-			
+
             counterElement(editorInstance).className = "cke_wordcount";
         }
 
@@ -194,12 +194,12 @@ CKEDITOR.plugins.add('wordcount', {
                 updateCounter(event.editor);
             }
         }, editor, null, 100);
-        
+
         editor.on('change', function (event) {
 
             updateCounter(event.editor);
         }, editor, null, 100);
-		
+
 		editor.on('uiSpace', function (event) {
             if (event.data.space == 'bottom') {
                 event.data.html += '<div id="' + counterId(event.editor) + '" class="cke_wordcount" style=""' + ' title="' + editor.lang.wordcount.title + '"' + '>&nbsp;</div>';
@@ -224,7 +224,7 @@ CKEDITOR.plugins.add('wordcount', {
                 window.clearInterval(intervalId);
             }
         }, editor, null, 300);
-        
+
         if (!String.prototype.trim) {
             String.prototype.trim = function () {
                 return this.replace(/^\s+|\s+$/g, '');
